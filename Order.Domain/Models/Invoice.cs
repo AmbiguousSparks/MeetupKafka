@@ -1,10 +1,11 @@
-﻿using Order.Domain.Models.Enums;
+﻿using Order.Domain.Data;
+using Order.Domain.Models.Enums;
 using System;
 using System.Collections.Generic;
 
 namespace Order.Domain.Models
 {
-    public class Invoice
+    public class Invoice : Entity
     {
         public string Name { get; set; }
         public decimal Value { get; set; }

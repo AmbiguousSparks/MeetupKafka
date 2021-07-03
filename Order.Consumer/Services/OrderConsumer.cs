@@ -1,11 +1,12 @@
 ﻿using Confluent.Kafka;
+using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Order.Consumer.Hubs;
 using Order.Consumer.Hubs.Interfaces;
 using Order.Domain.Configurations;
-using Order.Domain.Models;
+using Order.Infra.Requests;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -16,63 +17,53 @@ namespace Order.Consumer.Services
     public class OrderConsumer : BackgroundService
     {
         private readonly IHubContext<InvoiceHub, IInvoiceHub> _hubContext;
+
+        private readonly IMediator _mediator;
         private readonly KafkaConfig _config;
-        public OrderConsumer(KafkaConfig config, IHubContext<InvoiceHub, IInvoiceHub> hubContext)
+        public OrderConsumer(KafkaConfig config, IHubContext<InvoiceHub, IInvoiceHub> hubContext, IMediator mediatr)
         {
             _config = config;
             _hubContext = hubContext;
+            _mediator = mediatr;
         }
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Run(() =>
+            if (_config.Topics.Count > 0)
             {
-                ConsumerConfig config = new()
+                await Task.Run(async () =>
                 {
-                    BootstrapServers = _config.BootstrapServer,
-                    GroupId = "1",
-                    ClientId = "1"
-                };
-                using IConsumer<Ignore, string> consumer = new ConsumerBuilder<Ignore, string>(config).Build();
-                consumer.Subscribe(_config.Topics);
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    try
+                    ConsumerConfig config = new()
                     {
-                        var result = consumer.Consume(stoppingToken);
-                        Debug.WriteLine(result.Message.Value);
-                        Invoice order = JsonConvert.DeserializeObject<Invoice>(result.Message.Value);
-                        _hubContext.Clients.All.NewInvoice(order, stoppingToken);
-                    }
-                    catch(ConsumeException e)
+                        BootstrapServers = _config.BootstrapServer,
+                        GroupId = "1",
+                        ClientId = "1"
+                    };
+                    using IConsumer<Ignore, string> consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+                    consumer.Subscribe(_config.Topics);
+                    while (!stoppingToken.IsCancellationRequested)
                     {
-                        Debug.WriteLine($"Erro while consuming: {e.Error.Reason}");
+                        try
+                        {
+                            var result = consumer.Consume(stoppingToken);
+                            Debug.WriteLine(result.Message.Value);
+                            InvoiceRequest order = JsonConvert.DeserializeObject<InvoiceRequest>(result.Message.Value);
+                            var invoice = await _mediator.Send(order, stoppingToken);
+                            await _hubContext.Clients.All.NewInvoice(invoice, stoppingToken);
+                        }
+                        catch (ConsumeException e)
+                        {
+                            Debug.WriteLine($"Erro while consuming: {e.Error.Reason}");
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            consumer.Close();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine($"Erro while consuming: {e.Message}");
+                        }
                     }
-                    catch (OperationCanceledException)
-                    {
-                        consumer.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine($"Erro while consuming: {e.Message}");
-                    }
-                }
-            }, stoppingToken);
-        }
-
-        private void StartConsuming(CancellationToken cancellationToken = default)
-        {
-            ConsumerConfig config = new()
-            {
-                BootstrapServers = _config.BootstrapServer,
-                GroupId = "1",
-                ClientId = "1"
-            };
-            using IConsumer<Ignore, string> consumer = new ConsumerBuilder<Ignore, string>(config).Build();
-            consumer.Subscribe(_config.Topics);
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var result = consumer.Consume(cancellationToken);
-                Debug.WriteLine(result.Message.Value);
+                }, stoppingToken);
             }
         }
     }

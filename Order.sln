@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Order.Consumer", "Order.Consumer\Order.Consumer.csproj", "{E5575A65-AE79-4900-9B5E-A513DF4D033C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.Consumer", "Order.Consumer\Order.Consumer.csproj", "{E5575A65-AE79-4900-9B5E-A513DF4D033C}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6BDCBECC-125C-42E7-9CCD-4AC518FE36C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Order.Domain", "Order.Domain\Order.Domain.csproj", "{31B9AC15-A9DA-4582-BB0B-0ABA398075E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order.Domain", "Order.Domain\Order.Domain.csproj", "{31B9AC15-A9DA-4582-BB0B-0ABA398075E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{3B3173E0-B928-4D14-B5A0-E62587053985}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{A8E39461-0B7F-4FA0-83A3-F8A221BD8E10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Order.Infra", "Order.Infra\Order.Infra.csproj", "{022407F9-C8C9-4954-920F-A4CFF9A663F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +33,19 @@ Global
 		{31B9AC15-A9DA-4582-BB0B-0ABA398075E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31B9AC15-A9DA-4582-BB0B-0ABA398075E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31B9AC15-A9DA-4582-BB0B-0ABA398075E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{022407F9-C8C9-4954-920F-A4CFF9A663F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{022407F9-C8C9-4954-920F-A4CFF9A663F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{022407F9-C8C9-4954-920F-A4CFF9A663F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{022407F9-C8C9-4954-920F-A4CFF9A663F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5575A65-AE79-4900-9B5E-A513DF4D033C} = {3B3173E0-B928-4D14-B5A0-E62587053985}
+		{6BDCBECC-125C-42E7-9CCD-4AC518FE36C6} = {A8E39461-0B7F-4FA0-83A3-F8A221BD8E10}
+		{31B9AC15-A9DA-4582-BB0B-0ABA398075E2} = {A8E39461-0B7F-4FA0-83A3-F8A221BD8E10}
+		{022407F9-C8C9-4954-920F-A4CFF9A663F1} = {A8E39461-0B7F-4FA0-83A3-F8A221BD8E10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1096AA2-95C6-43B2-92E0-90AE18D833CE}

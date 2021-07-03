@@ -1,12 +1,19 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Order.Consumer.Extensions;
 using Order.Consumer.Hubs;
+using MediatR;
 using Order.Consumer.Services;
 using Order.Domain.Configurations;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Order.Infra.Handlers;
+using System.Reflection;
 
 namespace Order.Consumer
 {
@@ -21,18 +28,23 @@ namespace Order.Consumer
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {                      
             services.AddMvcCore();
             services.AddSignalR();
             services.AddControllersWithViews();
+            services.RegistryMongoService(Configuration.GetConnectionString("Mongo"));
+            var assembly = AppDomain.CurrentDomain.Load(typeof(InvoiceHandler).GetTypeInfo().Assembly.FullName);
+            services.AddMediatR(assembly);
+            string topics = Configuration.GetSection("Topics").GetSection("TopicNewOrder").Value;
             KafkaConfig config = new()
             {
-                BootstrapServer = Environment.GetEnvironmentVariable("KAFKA_HOST"),
-                Topics = new System.Collections.Generic.List<string>()
-                {
-                    Environment.GetEnvironmentVariable("TOPIC_NEW_ORDER")
-                }
+                BootstrapServer = Configuration.GetSection("KafkaHost").Value,
+                Topics = string.IsNullOrEmpty(topics) ? new List<string>(0) : topics.Split(';').ToList()
             };
+            services.AddSpaStaticFiles(config =>
+            {
+                config.RootPath = "ClientApp/dist";
+            });            
             services.AddSingleton(config);
             services.AddHostedService<OrderConsumer>();
         }
@@ -53,6 +65,10 @@ namespace Order.Consumer
             
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
 
             app.UseRouting();
 
@@ -61,8 +77,18 @@ namespace Order.Consumer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "Default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapHub<InvoiceHub>("/invoice-hub");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.StartupTimeout = new TimeSpan(0, 5, 0);
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
     }
