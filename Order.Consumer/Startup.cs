@@ -33,6 +33,7 @@ namespace Order.Consumer
             services.AddSignalR();
             services.AddControllersWithViews();
             services.RegistryMongoService(Configuration.GetConnectionString("Mongo"));
+            services.AddProducers(Configuration);
             var assembly = AppDomain.CurrentDomain.Load(typeof(InvoiceHandler).GetTypeInfo().Assembly.FullName);
             services.AddMediatR(assembly);
             string topics = Configuration.GetSection("Topics").GetSection("TopicNewOrder").Value;

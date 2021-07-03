@@ -25,10 +25,10 @@ namespace Order.Infra.Mongo
             await _dbSet.InsertOneAsync(entity);
         }
 
-        public virtual async Task<TEntity> GetById(Guid id)
+        public virtual async Task<TEntity> GetById(Guid id, CancellationToken cancellationToken = default)
         {
-            var data = await _dbSet.FindAsync(Filter.Eq("_id", id));
-            return await data.FirstOrDefaultAsync();
+            var data = await _dbSet.FindAsync(Filter.Eq("_id", id), cancellationToken: cancellationToken);
+            return await data.FirstOrDefaultAsync(cancellationToken);
         }
         public virtual async Task<IList<TEntity>> GetAll(CancellationToken cancellationToken = default)
         {
@@ -36,9 +36,9 @@ namespace Order.Infra.Mongo
             return all.ToList(cancellationToken);
         }
 
-        public virtual async Task Update(TEntity obj)
+        public virtual async Task Update(TEntity obj, CancellationToken cancellationToken = default)
         {
-            await _dbSet.ReplaceOneAsync(Filter.Eq("_id", obj.Id), obj);
+            await _dbSet.ReplaceOneAsync(Filter.Eq("_id", obj.Id), obj, cancellationToken: cancellationToken);
         }
 
         public virtual async Task Remove(Guid id)

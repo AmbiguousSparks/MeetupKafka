@@ -16,6 +16,6 @@ namespace Order.Domain.Models
         public List<string> Features { get; set; }
         public DateTime SolicitationTime { get; set; }
         public DateTime UpdateTime { get; set; }
-        public bool IsApproved { get; set; }
+        public InvoiceStatus Status { get; set; }
     }
 }

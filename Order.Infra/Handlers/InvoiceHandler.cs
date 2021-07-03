@@ -21,7 +21,7 @@ namespace Order.Infra.Handlers
                 Category = request.Category,
                 Description = request.Description,
                 Features = request.Features,
-                IsApproved = false,
+                Status = Domain.Models.Enums.InvoiceStatus.Pending,
                 Name = request.Name,
                 Photo = request.Photo,
                 SolicitationTime = request.SolicitationTime,
