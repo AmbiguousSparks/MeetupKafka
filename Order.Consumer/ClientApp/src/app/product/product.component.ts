@@ -15,7 +15,13 @@ export class ProductComponent implements OnInit {
       .then((res) => {
         this.products = res;
       });
+    this.invoiceService.invoiceUpdate.on("InvoiceUpdate", invoices => {
+      this.products = invoices;
+    });
   }
 
-  ngOnInit(): void {}
+  public updateStatus(id: string, status: number): void {
+    this.invoiceService.updateStatus(id, status);
+  }
+  ngOnInit(): void { }
 }

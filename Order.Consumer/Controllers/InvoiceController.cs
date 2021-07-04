@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Order.Infra.Repositories.Interfaces;
+using Order.Infra.Requests;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,9 +11,11 @@ namespace Order.Consumer.Controllers
     public class InvoiceController : Controller
     {
         private readonly IInvoiceRepository _invoiceRepository;
-        public InvoiceController(IInvoiceRepository invoiceRepository)
+        private readonly IMediator _mediatr;
+        public InvoiceController(IInvoiceRepository invoiceRepository, IMediator mediator)
         {
             _invoiceRepository = invoiceRepository;
+            _mediatr = mediator;
         }
         [HttpGet, Route("Invoice/GetAll")]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
@@ -28,7 +32,31 @@ namespace Order.Consumer.Controllers
         [HttpGet, Route("Invoice/Get")]
         public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken = default)
         {
-            return Ok(await _invoiceRepository.GetById(Guid.Parse(id), cancellationToken));
+            try
+            {
+                Guid guidId = Guid.Empty;
+                if (!Guid.TryParse(id, out guidId))
+                    throw new ArgumentException("Id is not valid!");
+                return Ok(await _invoiceRepository.GetById(guidId, cancellationToken));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("There was an error handling your request: " + e.Message);
+            }
+        }
+
+        [HttpPost, Route("Invoice/UpdateStatus")]
+        public async Task<IActionResult> UpdateStatusInvoice([FromBody] UpdateInvoiceStatusRequest inStatusUpdate, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var invoice = await _mediatr.Send(inStatusUpdate, cancellationToken);
+                return Ok(invoice);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("There was an error handling your request: " + e.Message);
+            }
         }
     }
 }

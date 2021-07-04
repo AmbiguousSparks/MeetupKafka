@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Order.Infra.Handlers
 {
-    public class UpdateInvoiceStatusHandler : IRequestHandler<UpdateInvoiceStatusRequest, UpdateInvoiceStatusRequest>
+    public class UpdateInvoiceStatusHandler : IRequestHandler<UpdateInvoiceStatusRequest, Invoice>
     {
         private readonly IProducer<UpdateInvoiceStatusRequest> _invoiceUpdateProducer;
         private readonly IInvoiceRepository _invoiceRepository;
@@ -23,14 +23,14 @@ namespace Order.Infra.Handlers
             _invoiceRepository = invoiceRepository;
         }
 
-        public async Task<UpdateInvoiceStatusRequest> Handle(UpdateInvoiceStatusRequest request, CancellationToken cancellationToken)
+        public async Task<Invoice> Handle(UpdateInvoiceStatusRequest request, CancellationToken cancellationToken)
         {
             var invoice = await _invoiceRepository.GetById(request.Id, cancellationToken);
             invoice.Status = request.Status;
             invoice.UpdateTime = DateTime.Now;
             await _invoiceRepository.Update(invoice, cancellationToken);
             await _invoiceUpdateProducer.ProduceAsync(request, cancellationToken);
-            return request;
+            return invoice;
         }
     }
 }

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Output } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { EventEmitter } from 'events';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class InvoiceService {
   private _hubConnection: HubConnection;
+  @Output() invoiceUpdate = new EventEmitter();
   constructor(private httpClient: HttpClient) {
     this.createConnection();
     this.startConnection();
@@ -15,13 +17,24 @@ export class InvoiceService {
   }
   
   getInvoices(): Observable<Invoice[]> {
-    return this.httpClient.get<Invoice[]>("Invoice/GetAll");
+    return this.httpClient.get<Invoice[]>("Invoice/GetAllPending");
   }
   getById(id: string): Observable<Invoice> {
     return this.httpClient.get<Invoice>("Invoice/GetById?id=" + id);
   }
   private connect(name: string): void {
     this._hubConnection.invoke("Connect", name);
+  }
+  updateStatus(id: string, status: number): void {
+    let body = {
+      id,
+      status
+    };
+    this.httpClient.post<Invoice>("Invoice/UpdateStatus", body).toPromise().then(()=> {
+      this.invoiceUpdateHandler();
+    }).catch(err => {
+      console.error(err);
+    });
   }
   private createConnection(): void {
     this._hubConnection = new HubConnectionBuilder()
@@ -38,11 +51,14 @@ export class InvoiceService {
         console.log(error);
       });
   }
+  private invoiceUpdateHandler(): void {
+    this.getInvoices().toPromise().then(invoices => {
+      this.invoiceUpdate.emit("InvoiceUpdate", invoices);
+    });
+  }
   private registerServerEvents(): void {
     this._hubConnection.on("NewInvoice", () => {
-      this.getInvoices().toPromise().then(invoices => {
-        console.log(invoices);
-      });
+      this.invoiceUpdateHandler();
     });
   }
 }
