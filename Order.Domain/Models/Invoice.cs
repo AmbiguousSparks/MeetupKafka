@@ -10,8 +10,7 @@ namespace Order.Domain.Models
         public string Name { get; set; }
         public decimal Value { get; set; }
         public string Description { get; set; }
-        public string Photo { get; set; }
-        public byte[] PhotoByte => string.IsNullOrEmpty(Photo) ? null : Convert.FromBase64String(Photo);
+        public byte[] Photo { get; set; }
         public Categories Category { get; set; }
         public List<string> Features { get; set; }
         public DateTime SolicitationTime { get; set; }

@@ -16,10 +16,7 @@ namespace Order.Infra.Mongo
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
-
-            BsonDefaults.GuidRepresentation = GuidRepresentation.CSharpLegacy;
             Register();
-
             var mongoClient = new MongoClient(connectionString);
             _mongoDb = mongoClient.GetDatabase(DATABASE_NAME);
         }

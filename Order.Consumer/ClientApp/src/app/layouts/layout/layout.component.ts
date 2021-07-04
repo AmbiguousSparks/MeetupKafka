@@ -11,9 +11,9 @@ export class LayoutComponent implements OnInit {
   constructor(private invoiceService: InvoiceService) { }
 
   ngOnInit() {
-    this.invoiceService.newInvoice().toPromise().then(invoice => {
-      console.log(invoice);
-    });
+    // this.invoiceService.newInvoice().toPromise().then(invoice => {
+    //   console.log(invoice);
+    // });
   }
 
 }

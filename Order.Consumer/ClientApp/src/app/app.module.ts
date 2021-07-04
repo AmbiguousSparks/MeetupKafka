@@ -14,7 +14,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { ProductComponent } from './product/product.component';
-
+import { ProductCompComponent } from './components/product-comp/product-comp.component';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -30,7 +30,7 @@ import { ProductComponent } from './product/product.component';
     AppComponent,
     LayoutComponent,
     ProductComponent,
-
+    ProductCompComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

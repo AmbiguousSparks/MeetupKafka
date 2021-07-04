@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Order.Domain.Models;
 using Order.Infra.Mongo;
 using Order.Infra.Producers;
 using Order.Infra.Producers.Messaging;
@@ -29,6 +30,7 @@ namespace Order.Consumer.Extensions
             };
             services.AddSingleton(config);
             services.AddSingleton<IProducer<UpdateInvoiceStatusRequest>, InvoiceUpdateProducer>();
+            services.AddSingleton<IProducer<Invoice>, InvoiceProducer>();
             return services;
         }
     }

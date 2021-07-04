@@ -14,8 +14,11 @@ export class InvoiceService {
     this.registerServerEvents();
   }
   
-  newInvoice(): Observable<Invoice[]> {
-    return this.httpClient.get<Invoice[]>("Home/Index");
+  getInvoices(): Observable<Invoice[]> {
+    return this.httpClient.get<Invoice[]>("Invoice/GetAll");
+  }
+  getById(id: string): Observable<Invoice> {
+    return this.httpClient.get<Invoice>("Invoice/GetById?id=" + id);
   }
   private connect(name: string): void {
     this._hubConnection.invoke("Connect", name);
@@ -37,7 +40,7 @@ export class InvoiceService {
   }
   private registerServerEvents(): void {
     this._hubConnection.on("NewInvoice", () => {
-      this.newInvoice().toPromise().then(invoices => {
+      this.getInvoices().toPromise().then(invoices => {
         console.log(invoices);
       });
     });
@@ -46,5 +49,9 @@ export class InvoiceService {
 
 export interface Invoice {
   name: string;
-  _id: string;
+  id: string;
+  photo: string;
+  value: number;
+  category: number;
+  features: string[];
 }

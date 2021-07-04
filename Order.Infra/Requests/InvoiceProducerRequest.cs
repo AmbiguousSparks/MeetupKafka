@@ -1,12 +1,12 @@
-﻿using MediatR;
-using Order.Domain.Models;
+﻿using Confluent.Kafka;
+using MediatR;
 using Order.Domain.Models.Enums;
 using System;
 using System.Collections.Generic;
 
 namespace Order.Infra.Requests
 {
-    public class InvoiceRequest : IRequest<Invoice>
+    public class InvoiceProducerRequest : IRequest<DeliveryResult<string, string>>
     {
         public string Name { get; set; }
         public decimal Value { get; set; }
