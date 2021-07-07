@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Order.Infra.Repositories.Interfaces;
 using Order.Infra.Requests;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Order.Consumer.Controllers
 {    
+    [EnableCors("DEFAULT")]
     public class InvoiceController : Controller
     {
         private readonly IInvoiceRepository _invoiceRepository;

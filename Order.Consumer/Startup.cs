@@ -31,6 +31,15 @@ namespace Order.Consumer
         {                      
             services.AddMvcCore();
             services.AddSignalR();
+            services.AddCors(cors =>
+            {
+                cors.AddPolicy("DEFAULT", policy =>
+                {
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyOrigin();
+                });
+            });
             services.AddControllersWithViews();
             services.RegistryMongoService(Configuration.GetConnectionString("Mongo"));
             services.AddProducers(Configuration);
@@ -74,6 +83,8 @@ namespace Order.Consumer
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {
