@@ -15,12 +15,14 @@ export class InvoiceService {
     this.startConnection();
     this.registerServerEvents();
   }
+
+  private _host = window.location.origin + window.location.pathname;
   
   getInvoices(): Observable<Invoice[]> {
-    return this.httpClient.get<Invoice[]>("Invoice/GetAllPending");
+    return this.httpClient.get<Invoice[]>(this._host + "/api/Product/GetAllPending");
   }
   getById(id: string): Observable<Invoice> {
-    return this.httpClient.get<Invoice>("Invoice/GetById?id=" + id);
+    return this.httpClient.get<Invoice>(this._host + "/api/Product/GetById?id=" + id);
   }
   private connect(name: string): void {
     this._hubConnection.invoke("Connect", name);
@@ -30,7 +32,7 @@ export class InvoiceService {
       id,
       status
     };
-    this.httpClient.post<Invoice>("Invoice/UpdateStatus", body).toPromise().then(()=> {
+    this.httpClient.post<Invoice>(this._host + "/api/Product/UpdateStatus", body).toPromise().then(()=> {
       this.invoiceUpdateHandler();
     }).catch(err => {
       console.error(err);

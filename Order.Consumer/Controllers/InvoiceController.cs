@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Order.Consumer.Controllers
-{
+{    
     public class InvoiceController : Controller
     {
         private readonly IInvoiceRepository _invoiceRepository;
@@ -17,19 +17,19 @@ namespace Order.Consumer.Controllers
             _invoiceRepository = invoiceRepository;
             _mediatr = mediator;
         }
-        [HttpGet, Route("Invoice/GetAll")]
+        [HttpGet, Route("api/Product/GetAll")]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
         {
             return Ok(await _invoiceRepository.GetAll(cancellationToken));
         }
 
-        [HttpGet, Route("Invoice/GetAllPending")]
+        [HttpGet, Route("api/Product/GetAllPending")]
         public async Task<IActionResult> GetAllPending(CancellationToken cancellationToken = default)
         {
             return Ok(await _invoiceRepository.GetAllPending(cancellationToken));
         }
 
-        [HttpGet, Route("Invoice/Get")]
+        [HttpGet, Route("api/Product/Get")]
         public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken = default)
         {
             try
@@ -45,7 +45,7 @@ namespace Order.Consumer.Controllers
             }
         }
 
-        [HttpPost, Route("Invoice/UpdateStatus")]
+        [HttpPost, Route("api/Product/UpdateStatus")]
         public async Task<IActionResult> UpdateStatusInvoice([FromBody] UpdateInvoiceStatusRequest inStatusUpdate, CancellationToken cancellationToken = default)
         {
             try
