@@ -1,11 +1,11 @@
 ﻿using MediatR;
+using Order.Application.Requests;
 using Order.Domain.Models;
 using Order.Infra.Repositories.Interfaces;
-using Order.Infra.Requests;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Order.Infra.Handlers
+namespace Order.Application.Handlers
 {
     public class InvoiceHandler : IRequestHandler<InvoiceRequest, Invoice>
     {

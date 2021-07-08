@@ -1,14 +1,13 @@
-﻿using Confluent.Kafka;
-using MediatR;
+﻿using MediatR;
+using Order.Application.Requests;
 using Order.Domain.Models;
 using Order.Infra.Producers.Messaging;
 using Order.Infra.Repositories.Interfaces;
-using Order.Infra.Requests;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Order.Infra.Handlers
+namespace Order.Application.Handlers
 {
     public class UpdateInvoiceStatusHandler : IRequestHandler<UpdateInvoiceStatusRequest, Invoice>
     {

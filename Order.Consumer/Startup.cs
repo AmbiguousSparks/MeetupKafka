@@ -12,8 +12,11 @@ using Order.Domain.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Order.Infra.Handlers;
 using System.Reflection;
+using Order.Application.Middlewares;
+using Microsoft.Extensions.Logging;
+using Order.Application.Extensions;
+using Order.Application.Handlers;
 
 namespace Order.Consumer
 {
@@ -29,6 +32,7 @@ namespace Order.Consumer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {                      
+            //TODO: Adicionar middleware pra erro
             services.AddMvcCore();
             services.AddSignalR();
             services.AddCors(cors =>
@@ -60,7 +64,7 @@ namespace Order.Consumer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -68,11 +72,16 @@ namespace Order.Consumer
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler(handler =>
+                {
+                    handler.UseMiddleware<LogMiddleware>();
+                });
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+
+            app.UseApplication();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
@@ -81,6 +90,8 @@ namespace Order.Consumer
             }
 
             app.UseRouting();
+
+            loggerFactory.AddFile("Logs/log-{Date}.txt", LogLevel.Information, isJson: true);
 
             app.UseAuthorization();
 

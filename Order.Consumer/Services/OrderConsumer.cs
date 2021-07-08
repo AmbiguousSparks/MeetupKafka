@@ -1,12 +1,15 @@
 ﻿using Confluent.Kafka;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Order.Application.Requests;
 using Order.Consumer.Hubs;
 using Order.Consumer.Hubs.Interfaces;
 using Order.Domain.Configurations;
-using Order.Infra.Requests;
+using Serilog;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -16,6 +19,7 @@ namespace Order.Consumer.Services
 {
     public class OrderConsumer : BackgroundService
     {
+        //TODO: refatorar codigo do consumer, adicionar interface generica pra consumers
         private readonly IHubContext<InvoiceHub, IInvoiceHub> _hubContext;
 
         private readonly IMediator _mediator;
@@ -47,12 +51,15 @@ namespace Order.Consumer.Services
                             var result = consumer.Consume(stoppingToken);
                             Debug.WriteLine(result.Message.Value);
                             InvoiceRequest order = JsonConvert.DeserializeObject<InvoiceRequest>(result.Message.Value);
-                            var invoice = await _mediator.Send(order, stoppingToken);
-                            await _hubContext.Clients.All.NewInvoice(invoice, stoppingToken);
+                            if (order is not null)
+                            {
+                                var invoice = await _mediator.Send(order, stoppingToken);
+                                await _hubContext.Clients.All.NewInvoice(invoice, stoppingToken);
+                            }
                         }
                         catch (ConsumeException e)
                         {
-                            Debug.WriteLine($"Erro while consuming: {e.Error.Reason}");
+                            Log.Error($"Erro while consuming: {e.Error.Reason}");
                         }
                         catch (OperationCanceledException)
                         {
@@ -60,7 +67,7 @@ namespace Order.Consumer.Services
                         }
                         catch (Exception e)
                         {
-                            Debug.WriteLine($"Erro while consuming: {e.Message}");
+                            Log.Error($"Erro while consuming: {e.Message}");
                         }
                     }
                 }, stoppingToken);

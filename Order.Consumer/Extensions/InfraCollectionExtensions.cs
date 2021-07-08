@@ -1,13 +1,13 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Order.Application.Requests;
+using Order.Consumer.Producers;
 using Order.Domain.Models;
 using Order.Infra.Mongo;
-using Order.Infra.Producers;
 using Order.Infra.Producers.Messaging;
 using Order.Infra.Repositories;
 using Order.Infra.Repositories.Interfaces;
-using Order.Infra.Requests;
 
 namespace Order.Consumer.Extensions
 {

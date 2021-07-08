@@ -1,13 +1,12 @@
 ﻿using Confluent.Kafka;
 using MediatR;
+using Order.Application.Requests;
 using Order.Domain.Models;
 using Order.Infra.Producers.Messaging;
-using Order.Infra.Requests;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Order.Infra.Handlers
+namespace Order.Application.Handlers
 {
     public class InvoiceProducerHandler : IRequestHandler<InvoiceProducerRequest, DeliveryResult<string, string>>
     {

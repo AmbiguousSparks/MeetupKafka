@@ -2,7 +2,7 @@
 using Order.Domain.Models;
 using Order.Infra.Producers.Messaging;
 
-namespace Order.Infra.Producers
+namespace Order.Consumer.Producers
 {
     public class InvoiceProducer : ConfluentProducerBase<Invoice>
     {

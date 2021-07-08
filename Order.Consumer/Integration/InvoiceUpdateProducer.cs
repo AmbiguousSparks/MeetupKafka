@@ -1,8 +1,8 @@
 ﻿using Confluent.Kafka;
+using Order.Application.Requests;
 using Order.Infra.Producers.Messaging;
-using Order.Infra.Requests;
 
-namespace Order.Infra.Producers
+namespace Order.Consumer.Producers
 {
     public class InvoiceUpdateProducer : ConfluentProducerBase<UpdateInvoiceStatusRequest>
     {

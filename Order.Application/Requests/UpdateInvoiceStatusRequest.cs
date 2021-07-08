@@ -3,7 +3,7 @@ using Order.Domain.Models;
 using Order.Domain.Models.Enums;
 using System;
 
-namespace Order.Infra.Requests
+namespace Order.Application.Requests
 {
     public class UpdateInvoiceStatusRequest : IRequest<Invoice>
     {

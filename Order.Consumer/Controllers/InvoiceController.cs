@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Order.Application;
+using Order.Application.Requests;
 using Order.Infra.Repositories.Interfaces;
-using Order.Infra.Requests;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Order.Consumer.Controllers
-{    
+{
     [EnableCors("DEFAULT")]
     public class InvoiceController : Controller
     {
@@ -41,7 +42,7 @@ namespace Order.Consumer.Controllers
                     throw new ArgumentException("Id is not valid!");
                 return Ok(await _invoiceRepository.GetById(guidId, cancellationToken));
             }
-            catch (Exception e)
+            catch (OrderException e)
             {
                 return BadRequest("There was an error handling your request: " + e.Message);
             }
@@ -55,7 +56,7 @@ namespace Order.Consumer.Controllers
                 var invoice = await _mediatr.Send(inStatusUpdate, cancellationToken);
                 return Ok(invoice);
             }
-            catch (Exception e)
+            catch (OrderException e)
             {
                 return BadRequest("There was an error handling your request: " + e.Message);
             }
