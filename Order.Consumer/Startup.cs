@@ -9,8 +9,6 @@ using Order.Consumer.Hubs;
 using MediatR;
 using Order.Consumer.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Order.Application.Extensions;
@@ -32,21 +30,12 @@ namespace Order.Consumer
         {
             services.AddMvcCore();
             services.AddSignalR();
-            services.AddCors(cors =>
-            {
-                cors.AddPolicy("DEFAULT", policy =>
-                {
-                    policy.AllowAnyMethod();
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyOrigin();
-                });
-            });
-            services.AddControllersWithViews();
 
-            services.AddLogging(config =>
-            {
-                config.AddFile("Logs/log-{Date}.txt", LogLevel.Information, isJson: true);
-            });
+            services.AddCorsDefault();
+
+            services.AddApplication(Configuration);
+
+            services.AddControllersWithViews();
 
             services.RegistryMongoService(Configuration.GetConnectionString("Mongo"));
             services.AddProducers(Configuration);
@@ -57,7 +46,6 @@ namespace Order.Consumer
             {
                 config.RootPath = "ClientApp/dist";
             });
-            //TODO: refatorar código do startup
             services.AddHostedService<OrderListenerService>();
         }
 

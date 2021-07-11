@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Order.Application;
@@ -23,10 +24,10 @@ namespace Order.Consumer.Controllers
         [HttpGet, Route("api/Product/GetAll")]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
         {
-            return Ok(await _invoiceRepository.GetAll(cancellationToken));
+            return Ok(await _invoiceRepository.GetAllDecided(cancellationToken));
         }
 
-        [HttpGet, Route("api/Product/GetAllPending")]
+        [HttpGet, Route("api/Product/GetAllPending"), Authorize]
         public async Task<IActionResult> GetAllPending(CancellationToken cancellationToken = default)
         {
             return Ok(await _invoiceRepository.GetAllPending(cancellationToken));
@@ -48,7 +49,7 @@ namespace Order.Consumer.Controllers
             }
         }
 
-        [HttpPost, Route("api/Product/UpdateStatus")]
+        [HttpPost, Route("api/Product/UpdateStatus"), Authorize]
         public async Task<IActionResult> UpdateStatusInvoice([FromBody] UpdateInvoiceStatusRequest inStatusUpdate, CancellationToken cancellationToken = default)
         {
             try

@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using Order.Domain.Data;
+using Order.Infra.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Order.Infra.Mongo
 {
-    public abstract class BaseRepository<TEntity> where TEntity : Entity
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
         protected readonly IMongoContext _context;
         protected readonly IMongoCollection<TEntity> _dbSet;
@@ -19,8 +20,8 @@ namespace Order.Infra.Mongo
             _context = context;
             _dbSet = _context.GetCollection<TEntity>(typeof(TEntity).Name);
         }
-        
-        public virtual async Task Add(TEntity entity)
+
+        public virtual async Task Add(TEntity entity, CancellationToken cancellationToken = default)
         {
             await _dbSet.InsertOneAsync(entity);
         }
@@ -41,9 +42,9 @@ namespace Order.Infra.Mongo
             await _dbSet.ReplaceOneAsync(Filter.Eq("_id", obj.Id), obj, cancellationToken: cancellationToken);
         }
 
-        public virtual async Task Remove(Guid id)
+        public virtual async Task Remove(Guid id, CancellationToken cancellationToken = default)
         {
-            await _dbSet.DeleteOneAsync(Filter.Eq("_id", id));
+            await _dbSet.DeleteOneAsync(Filter.Eq("_id", id), cancellationToken);
         }
     }
 }

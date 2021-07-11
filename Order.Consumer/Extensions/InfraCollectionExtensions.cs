@@ -19,7 +19,8 @@ namespace Order.Consumer.Extensions
         {
             services
                 .AddSingleton<IMongoContext>(s => new MongoContext(connectionString))
-                .AddTransient<IInvoiceRepository, InvoiceRepository>();
+                .AddTransient<IInvoiceRepository, InvoiceRepository>()
+                .AddTransient<IUserRepository, UserRepository>();
             return services;
         }
         public static IServiceCollection AddProducers(this IServiceCollection services, IConfiguration configuration)
