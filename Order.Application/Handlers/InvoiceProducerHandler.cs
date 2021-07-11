@@ -2,7 +2,7 @@
 using MediatR;
 using Order.Application.Requests;
 using Order.Domain.Models;
-using Order.Infra.Producers.Messaging;
+using Order.Infra.Messaging.Producers.Interface;
 using System.Threading;
 using System.Threading.Tasks;
 

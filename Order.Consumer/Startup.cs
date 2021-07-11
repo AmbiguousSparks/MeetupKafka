@@ -8,12 +8,10 @@ using Order.Consumer.Extensions;
 using Order.Consumer.Hubs;
 using MediatR;
 using Order.Consumer.Services;
-using Order.Domain.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Order.Application.Middlewares;
 using Microsoft.Extensions.Logging;
 using Order.Application.Extensions;
 using Order.Application.Handlers;
@@ -31,8 +29,7 @@ namespace Order.Consumer
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {                      
-            //TODO: Adicionar middleware pra erro
+        {
             services.AddMvcCore();
             services.AddSignalR();
             services.AddCors(cors =>
@@ -53,21 +50,15 @@ namespace Order.Consumer
 
             services.RegistryMongoService(Configuration.GetConnectionString("Mongo"));
             services.AddProducers(Configuration);
+            services.AddConsumers(Configuration);
             var assembly = AppDomain.CurrentDomain.Load(typeof(InvoiceHandler).GetTypeInfo().Assembly.FullName);
             services.AddMediatR(assembly);
-            string topics = Configuration.GetSection("Topics").GetSection("TopicNewOrder").Value;
-            KafkaConfig config = new()
-            {
-                BootstrapServer = Configuration.GetSection("KafkaHost").Value,
-                Topics = string.IsNullOrEmpty(topics) ? new List<string>(0) : topics.Split(';').ToList()
-            };
             services.AddSpaStaticFiles(config =>
             {
                 config.RootPath = "ClientApp/dist";
-            });            
-            services.AddSingleton(config);
+            });
             //TODO: refatorar código do startup
-            services.AddHostedService<OrderConsumer>();
+            services.AddHostedService<OrderListenerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

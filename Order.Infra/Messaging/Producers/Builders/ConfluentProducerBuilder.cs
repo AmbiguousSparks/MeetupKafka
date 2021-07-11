@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Order.Infra.Producers.Messaging
+namespace Order.Infra.Messaging.Producers.Builders
 {
     internal class ConfluentProducerBuilder
     {

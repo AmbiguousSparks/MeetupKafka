@@ -9,5 +9,6 @@ namespace Order.Application.Requests
     {
         public Guid Id { get; set; }
         public InvoiceStatus Status { get; set; }
+        public string Name { get; set; }
     }
 }

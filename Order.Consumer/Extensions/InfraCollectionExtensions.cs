@@ -2,10 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Order.Application.Requests;
-using Order.Consumer.Producers;
+using Order.Consumer.Integration.Consumers;
+using Order.Consumer.Integration.Producers;
 using Order.Domain.Models;
+using Order.Infra.Messaging.Consumers.Intefaces;
+using Order.Infra.Messaging.Producers.Interface;
 using Order.Infra.Mongo;
-using Order.Infra.Producers.Messaging;
 using Order.Infra.Repositories;
 using Order.Infra.Repositories.Interfaces;
 
@@ -22,15 +24,17 @@ namespace Order.Consumer.Extensions
         }
         public static IServiceCollection AddProducers(this IServiceCollection services, IConfiguration configuration)
         {
-            ProducerConfig config = new()
-            {
-                BootstrapServers = configuration.GetSection("KafkaHost").Value,
-                MessageSendMaxRetries = 3,
-                MessageTimeoutMs = 15000
-            };
+            ProducerConfig config = configuration.GetSection("ProducerConfig").Get<ProducerConfig>();
             services.AddSingleton(config);
             services.AddSingleton<IProducer<UpdateInvoiceStatusRequest>, InvoiceUpdateProducer>();
             services.AddSingleton<IProducer<Invoice>, InvoiceProducer>();
+            return services;
+        }
+        public static IServiceCollection AddConsumers(this IServiceCollection services, IConfiguration configuration)
+        {
+            ConsumerConfig config = configuration.GetSection("ConsumerConfig").Get<ConsumerConfig>();
+            services.AddSingleton(config);
+            services.AddSingleton<IConsumer<InvoiceRequest>, OrderConsumer>();
             return services;
         }
     }

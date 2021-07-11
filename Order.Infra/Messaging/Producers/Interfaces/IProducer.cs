@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Order.Infra.Producers.Messaging
+namespace Order.Infra.Messaging.Producers.Interface
 {
     public interface IProducer<T>
     {

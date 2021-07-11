@@ -1,8 +1,8 @@
 ﻿using Confluent.Kafka;
 using Order.Domain.Models;
-using Order.Infra.Producers.Messaging;
+using Order.Infra.Messaging.Producers;
 
-namespace Order.Consumer.Producers
+namespace Order.Consumer.Integration.Producers
 {
     public class InvoiceProducer : ConfluentProducerBase<Invoice>
     {

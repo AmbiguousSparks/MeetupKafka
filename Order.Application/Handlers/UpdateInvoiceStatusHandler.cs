@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Order.Application.Requests;
 using Order.Domain.Models;
-using Order.Infra.Producers.Messaging;
+using Order.Infra.Messaging.Producers.Interface;
 using Order.Infra.Repositories.Interfaces;
 using System;
 using System.Threading;
@@ -27,6 +27,7 @@ namespace Order.Application.Handlers
             var invoice = await _invoiceRepository.GetById(request.Id, cancellationToken);
             invoice.Status = request.Status;
             invoice.UpdateTime = DateTime.Now;
+            request.Name = invoice.Name;
             await _invoiceRepository.Update(invoice, cancellationToken);
             await _invoiceUpdateProducer.ProduceAsync(request, cancellationToken);
             return invoice;

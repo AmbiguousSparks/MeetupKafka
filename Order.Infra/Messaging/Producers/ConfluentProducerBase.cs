@@ -1,10 +1,12 @@
 ﻿using Confluent.Kafka;
 using Newtonsoft.Json;
+using Order.Infra.Messaging.Producers.Builders;
+using Order.Infra.Messaging.Producers.Interface;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Order.Infra.Producers.Messaging
+namespace Order.Infra.Messaging.Producers
 {
     public abstract class ConfluentProducerBase<T> : IProducer<T>, IDisposable
     {
@@ -21,6 +23,7 @@ namespace Order.Infra.Producers.Messaging
         public void Dispose()
         {
             _producer.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public async Task<DeliveryResult<string, string>> ProduceAsync(T message, CancellationToken cancellationToken = default)
