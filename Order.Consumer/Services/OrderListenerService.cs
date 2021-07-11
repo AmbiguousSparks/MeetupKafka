@@ -16,7 +16,6 @@ namespace Order.Consumer.Services
 {
     public class OrderListenerService : BackgroundService
     {
-        //TODO: refatorar codigo do consumer, adicionar interface generica pra consumers
         private readonly IHubContext<InvoiceHub, IInvoiceHub> _hubContext;
 
         private readonly IMediator _mediator;
