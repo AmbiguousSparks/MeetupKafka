@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -9,7 +8,6 @@ using Order.Application.Requests;
 using Order.Consumer.Hubs;
 using Order.Consumer.Hubs.Interfaces;
 using Order.Domain.Configurations;
-using Serilog;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -24,11 +22,13 @@ namespace Order.Consumer.Services
 
         private readonly IMediator _mediator;
         private readonly KafkaConfig _config;
-        public OrderConsumer(KafkaConfig config, IHubContext<InvoiceHub, IInvoiceHub> hubContext, IMediator mediatr)
+        private readonly ILogger<OrderConsumer> _logger;
+        public OrderConsumer(KafkaConfig config, IHubContext<InvoiceHub, IInvoiceHub> hubContext, IMediator mediatr, ILogger<OrderConsumer> logger)
         {
             _config = config;
             _hubContext = hubContext;
             _mediator = mediatr;
+            _logger = logger;
         }
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -59,7 +59,7 @@ namespace Order.Consumer.Services
                         }
                         catch (ConsumeException e)
                         {
-                            Log.Error($"Erro while consuming: {e.Error.Reason}");
+                            _logger.LogError($"Erro while consuming: {e.Error.Reason}");
                         }
                         catch (OperationCanceledException)
                         {
@@ -67,7 +67,7 @@ namespace Order.Consumer.Services
                         }
                         catch (Exception e)
                         {
-                            Log.Error($"Erro while consuming: {e.Message}");
+                            _logger.LogError($"Erro while consuming: {e.Message}");
                         }
                     }
                 }, stoppingToken);

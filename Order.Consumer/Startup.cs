@@ -45,6 +45,12 @@ namespace Order.Consumer
                 });
             });
             services.AddControllersWithViews();
+
+            services.AddLogging(config =>
+            {
+                config.AddFile("Logs/log-{Date}.txt", LogLevel.Information, isJson: true);
+            });
+
             services.RegistryMongoService(Configuration.GetConnectionString("Mongo"));
             services.AddProducers(Configuration);
             var assembly = AppDomain.CurrentDomain.Load(typeof(InvoiceHandler).GetTypeInfo().Assembly.FullName);
@@ -60,6 +66,7 @@ namespace Order.Consumer
                 config.RootPath = "ClientApp/dist";
             });            
             services.AddSingleton(config);
+            //TODO: refatorar código do startup
             services.AddHostedService<OrderConsumer>();
         }
 
@@ -72,10 +79,7 @@ namespace Order.Consumer
             }
             else
             {
-                app.UseExceptionHandler(handler =>
-                {
-                    handler.UseMiddleware<LogMiddleware>();
-                });
+                app.UseDeveloperExceptionPage();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -90,8 +94,6 @@ namespace Order.Consumer
             }
 
             app.UseRouting();
-
-            loggerFactory.AddFile("Logs/log-{Date}.txt", LogLevel.Information, isJson: true);
 
             app.UseAuthorization();
 
