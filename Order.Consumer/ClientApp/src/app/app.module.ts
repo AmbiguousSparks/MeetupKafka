@@ -10,11 +10,9 @@ import { ComponentsModule } from './components/components.module';
 
 import { AppComponent } from './app.component';
 
-import { DashboardComponent } from './dashboard/dashboard.component';
-
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { ProductComponent } from './product/product.component';
-import { ProductCompComponent } from './components/product-comp/product-comp.component';
+import { LoginComponent } from './login/login.component';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -23,14 +21,12 @@ import { ProductCompComponent } from './components/product-comp/product-comp.com
     HttpClientModule,
     ComponentsModule,
     RouterModule,
-    AppRoutingModule,
-
+    AppRoutingModule
   ],
   declarations: [
     AppComponent,
     LayoutComponent,
-    ProductComponent,
-    ProductCompComponent
+    ProductComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Order.Application;
 using Order.Application.Requests;
+using Order.Consumer.Models;
+using Order.Domain.Models;
 using Order.Infra.Repositories.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,13 +27,27 @@ namespace Order.Consumer.Controllers
         [HttpGet, Route("api/Product/GetAll")]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
         {
-            return Ok(await _invoiceRepository.GetAllDecided(cancellationToken));
+            try
+            {
+                return Ok(new ResponseBuilder<IList<Invoice>>().Build(await _invoiceRepository.GetAllDecided(cancellationToken)));
+            }catch(OrderException e)
+            {
+                List<string> errors = new() { e.Message };
+                return BadRequest(new ResponseBuilder<bool>().Build(false, System.Net.HttpStatusCode.BadRequest, true, errors));
+            }
         }
 
         [HttpGet, Route("api/Product/GetAllPending"), Authorize]
         public async Task<IActionResult> GetAllPending(CancellationToken cancellationToken = default)
         {
-            return Ok(await _invoiceRepository.GetAllPending(cancellationToken));
+            try
+            {
+                return Ok(new ResponseBuilder<IList<Invoice>>().Build(await _invoiceRepository.GetAllPending(cancellationToken)));
+            }catch(OrderException e)
+            {
+                List<string> errors = new() { e.Message };
+                return BadRequest(new ResponseBuilder<bool>().Build(false, System.Net.HttpStatusCode.BadRequest, true, errors));
+            }
         }
 
         [HttpGet, Route("api/Product/Get")]
@@ -41,11 +58,12 @@ namespace Order.Consumer.Controllers
                 Guid guidId = Guid.Empty;
                 if (!Guid.TryParse(id, out guidId))
                     throw new ArgumentException("Id is not valid!");
-                return Ok(await _invoiceRepository.GetById(guidId, cancellationToken));
+                return Ok(new ResponseBuilder<Invoice>().Build(await _invoiceRepository.GetById(guidId, cancellationToken)));
             }
             catch (OrderException e)
             {
-                return BadRequest("There was an error handling your request: " + e.Message);
+                List<string> errors = new() { e.Message };
+                return BadRequest(new ResponseBuilder<bool>().Build(false, System.Net.HttpStatusCode.BadRequest, true, errors));
             }
         }
 
@@ -55,11 +73,12 @@ namespace Order.Consumer.Controllers
             try
             {
                 var invoice = await _mediatr.Send(inStatusUpdate, cancellationToken);
-                return Ok(invoice);
+                return Ok(new ResponseBuilder<Invoice>().Build(invoice));
             }
             catch (OrderException e)
             {
-                return BadRequest("There was an error handling your request: " + e.Message);
+                List<string> errors = new() { e.Message };
+                return BadRequest(new ResponseBuilder<bool>().Build(false, System.Net.HttpStatusCode.BadRequest, true, errors));
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Order.Application.Requests
         public string Description { get; set; }
         public byte[] Photo { get; set; }        
         public Categories Category { get; set; }
-        public List<string> Features { get; set; }
+        public Dictionary<string, string> Features { get; set; }
         public DateTime SolicitationTime { get; set; }
     }
 }

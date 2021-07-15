@@ -17,7 +17,7 @@ namespace Order.Application.Services
             return await Task.Run(() =>
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(tokenRequest.TokenSettings.TokenSecret);
+                var key = Encoding.UTF8.GetBytes(tokenRequest.TokenSettings.TokenSecret);
                 var tokenDecriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
@@ -33,7 +33,8 @@ namespace Order.Application.Services
                 {
                     Token = tokenHandler.WriteToken(token),
                     ValidFrom = token.ValidFrom,
-                    ValidTo = token.ValidTo
+                    ValidTo = token.ValidTo,
+                    User = tokenRequest.User
                 };
                 return response;
             }, cancellationToken);

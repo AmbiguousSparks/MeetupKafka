@@ -60,7 +60,6 @@
 
   <ItemGroup>
     <Folder Include="Avros\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
