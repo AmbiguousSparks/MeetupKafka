@@ -11,9 +11,29 @@ import { User } from '../models/user';
 export class UserService {
 
   private _host = window.location.origin + window.location.pathname;
+  private _token: TokenResponse;
+
+  public get token(): TokenResponse {
+    let jsonuser = localStorage.getItem('user');
+    this._token = JSON.parse(jsonuser) as TokenResponse;
+    if (this._token && this._token != null && (this.getUtcFullDate(new Date(this._token.validTo)).getTime() <= this.getUtcFullDate(new Date()).getTime()))
+      this._token = null;
+    return this._token;
+  }
+  public set token(value: TokenResponse) {
+    let jsonuser = JSON.stringify(value);
+    localStorage.setItem('user', jsonuser);
+  }
+
+  private getUtcFullDate(date: Date): Date {
+    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes());
+  }
+
+  public isAuthenticated(): boolean {
+    return this.token !== null;
+  }
 
   constructor(private httpClient: HttpClient) {
-    console.log(this._host);
   }
 
   newUser(user: User): Observable<Response<User>> {
@@ -26,12 +46,16 @@ export class UserService {
     });
   }
 
-  login(user: User): Observable<Response<TokenResponse>> {
+
+  async login(user: User): Promise<Response<TokenResponse>> {
     const request = JSON.stringify(user);
     let headers = new HttpHeaders().set('Content-Type', 'application/json;charset=utf-8');
     let options = {
       headers
     };
-    return this.httpClient.post<Response<TokenResponse>>(`${this._host}api/Users/Login`, request, options);
+    let response = await this.httpClient.post<Response<TokenResponse>>(`${this._host}api/Users/Login`, request, options).toPromise();
+    if (!response.error)
+      this.token = response.result;
+    return response;
   }
 }

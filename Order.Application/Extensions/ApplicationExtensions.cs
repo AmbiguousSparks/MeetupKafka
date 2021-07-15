@@ -43,7 +43,7 @@ namespace Order.Application.Extensions
 
             services.AddLogging(config =>
             {
-                config.AddFile("Logs/log-{Date}.txt", LogLevel.Information, isJson: true);
+                config.AddFile("Logs/log-{Date}.txt", LogLevel.Error, isJson: true);
             });
 
 

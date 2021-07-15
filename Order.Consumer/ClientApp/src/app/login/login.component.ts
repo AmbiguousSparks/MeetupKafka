@@ -3,6 +3,7 @@ import { User } from '../models/user';
 import { UserService } from '../services/user.service';
 import { TokenResponse } from '../models/token.response';
 import { Response } from '../models/response';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -12,9 +13,11 @@ export class LoginComponent implements OnInit {
 
   user: User = new User();
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
+    if (this.userService.isAuthenticated())
+      this.router.navigate(['']);
   }
 
   invalidTouched(field): boolean {
@@ -28,7 +31,9 @@ export class LoginComponent implements OnInit {
   async onSubmit(): Promise<void> {
     if (!this.validateUser(this.user))
       return;
-    var resp: Response<TokenResponse> = await this.userService.login(this.user).toPromise();
-    console.log(resp);
+    var resp: Response<TokenResponse> = await this.userService.login(this.user);
+    if (resp.error)
+      console.log(resp.errors);
+    this.router.navigate(['']);
   }
 }

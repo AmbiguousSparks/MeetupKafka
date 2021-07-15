@@ -56,7 +56,7 @@ export class InvoiceService {
   }
   private invoiceUpdateHandler(): void {
     this.getInvoices().toPromise().then(invoices => {
-      this.invoiceUpdate.emit("InvoiceUpdate", invoices);
+      this.invoiceUpdate.emit("InvoiceUpdate", invoices.result);
     });
   }
   private registerServerEvents(): void {

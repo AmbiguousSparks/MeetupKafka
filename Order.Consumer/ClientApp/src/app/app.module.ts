@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 
@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { ProductComponent } from './product/product.component';
-import { LoginComponent } from './login/login.component';
+import { TokenMiddlewareService } from './services/token-middleware.service';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -28,7 +28,7 @@ import { LoginComponent } from './login/login.component';
     LayoutComponent,
     ProductComponent
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: TokenMiddlewareService, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
