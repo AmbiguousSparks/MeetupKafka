@@ -7,7 +7,7 @@ namespace Order.Consumer.Hubs
 {
     public class InvoiceHub : Hub<IInvoiceHub>
     {
-        private Hashtable connections = new();
+        private readonly Hashtable connections = new();
         public void Connect(string name)
         {
             connections.Add(name, Context.ConnectionId);            

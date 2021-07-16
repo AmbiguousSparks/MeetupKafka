@@ -2,7 +2,6 @@
 using Order.Application.Requests;
 using Order.Application.Responses;
 using Order.Application.Services;
-using Order.Domain.Models;
 using Order.Infra.Repositories.Interfaces;
 using System;
 using System.Threading;

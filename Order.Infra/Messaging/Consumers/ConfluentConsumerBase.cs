@@ -10,12 +10,10 @@ namespace Order.Infra.Messaging.Consumers
 {
     public abstract class ConfluentConsumerBase<T> : IConsumer<T>, IDisposable
     {
-        private readonly ConsumerConfig _consumerConfig;
         private readonly IConsumer<Ignore, string> _consumer;
         public abstract string Topics { get; }
         protected ConfluentConsumerBase(ConsumerConfig consumerConfig)
         {
-            _consumerConfig = consumerConfig;
             _consumer = new ConfluentConsumerBuilder()
                             .AddConfig(consumerConfig)
                             .Build(Topics);

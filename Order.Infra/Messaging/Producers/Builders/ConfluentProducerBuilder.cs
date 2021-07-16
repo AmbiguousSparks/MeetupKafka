@@ -6,7 +6,7 @@ namespace Order.Infra.Messaging.Producers.Builders
 {
     internal class ConfluentProducerBuilder
     {
-        private Dictionary<string, string> _configs = new();
+        private readonly Dictionary<string, string> _configs = new();
         public ConfluentProducerBuilder AddConfig(IEnumerable<KeyValuePair<string, string>> configs)
         {
             if (configs is null)

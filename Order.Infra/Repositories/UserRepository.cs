@@ -16,10 +16,10 @@ namespace Order.Infra.Repositories
 
         public async Task<User> GetByUsernameAndPassword(string username, string password, CancellationToken cancellationToken = default)
         {
-            var users = await _dbSet.FindAsync<User>(Filter.Eq(u => u.Username, username), cancellationToken: cancellationToken);
-            if (!await users.AnyAsync(cancellationToken))
-                throw new ArgumentException("Username or password is invalid!");
+            var users = await _dbSet.FindAsync<User>(Filter.Eq(u => u.Username, username), cancellationToken: cancellationToken);            
             var user = await users.FirstOrDefaultAsync(cancellationToken);
+            if (user is null)
+                throw new ArgumentException("Username or password is invalid!");
             if (user.Password != password)
                 throw new ArgumentException("Username or password is invalid!");
             return user;

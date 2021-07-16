@@ -28,15 +28,19 @@ export class InvoiceService {
   private connect(name: string): void {
     this._hubConnection.invoke("Connect", name);
   }
-  updateStatus(id: string, status: number): void {
-    let body = {
-      id,
-      status
-    };
-    this.httpClient.post<Response<Invoice>>(this._host + "api/Product/UpdateStatus", body).toPromise().then(()=> {
-      this.invoiceUpdateHandler();
-    }).catch(err => {
-      console.error(err);
+  updateStatus(id: string, status: number): Promise<void> {
+    return new Promise((s, f) => {
+      let body = {
+        id,
+        status
+      };
+      this.httpClient.post<Response<Invoice>>(this._host + "api/Product/UpdateStatus", body).toPromise().then(() => {
+        this.invoiceUpdateHandler();
+        s();
+      }).catch(err => {
+        console.error(err);
+        f();
+      });
     });
   }
   private createConnection(): void {

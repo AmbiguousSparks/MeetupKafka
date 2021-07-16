@@ -10,12 +10,10 @@ namespace Order.Infra.Messaging.Producers
 {
     public abstract class ConfluentProducerBase<T> : IProducer<T>, IDisposable
     {
-        private readonly ProducerConfig _producerConfig;
-        private IProducer<string, string> _producer;
+        private readonly IProducer<string, string> _producer;
         public abstract string Topics { get; }
         public ConfluentProducerBase(ProducerConfig config)
         {
-            _producerConfig = config;
             _producer = new ConfluentProducerBuilder()
                 .AddConfig(config)
                 .Build();

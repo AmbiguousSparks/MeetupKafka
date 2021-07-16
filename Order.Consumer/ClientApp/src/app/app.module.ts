@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { ProductComponent } from './product/product.component';
 import { TokenMiddlewareService } from './services/token-middleware.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -21,7 +22,8 @@ import { TokenMiddlewareService } from './services/token-middleware.service';
     HttpClientModule,
     ComponentsModule,
     RouterModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatSnackBarModule
   ],
   declarations: [
     AppComponent,

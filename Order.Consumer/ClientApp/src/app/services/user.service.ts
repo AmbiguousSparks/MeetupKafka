@@ -29,6 +29,10 @@ export class UserService {
     return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes());
   }
 
+  public logout(): void {
+    localStorage.removeItem('user');
+  }
+
   public isAuthenticated(): boolean {
     return this.token !== null;
   }

@@ -72,6 +72,7 @@ namespace Order.Consumer.Controllers
         {
             try
             {
+                inStatusUpdate.Owner = User.Identity?.Name;
                 var invoice = await _mediatr.Send(inStatusUpdate, cancellationToken);
                 return Ok(new ResponseBuilder<Invoice>().Build(invoice));
             }

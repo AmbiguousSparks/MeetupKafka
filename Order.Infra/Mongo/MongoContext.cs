@@ -10,11 +10,11 @@ namespace Order.Infra.Mongo
     public class MongoContext : IMongoContext
     {
         private const string DATABASE_NAME = "meetup";
-        private IMongoDatabase _mongoDb;
+        private readonly IMongoDatabase _mongoDb;
         public MongoContext(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(nameof(connectionString));
+                throw new ArgumentException("Connection string can not be null", nameof(connectionString));
             Register();
             var mongoClient = new MongoClient(connectionString);
             _mongoDb = mongoClient.GetDatabase(DATABASE_NAME);

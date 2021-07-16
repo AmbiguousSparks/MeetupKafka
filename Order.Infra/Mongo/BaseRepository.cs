@@ -23,7 +23,7 @@ namespace Order.Infra.Mongo
 
         public virtual async Task Add(TEntity entity, CancellationToken cancellationToken = default)
         {
-            await _dbSet.InsertOneAsync(entity);
+            await _dbSet.InsertOneAsync(entity, cancellationToken: cancellationToken);
         }
 
         public virtual async Task<TEntity> GetById(Guid id, CancellationToken cancellationToken = default)
