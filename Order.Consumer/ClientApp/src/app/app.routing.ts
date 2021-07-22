@@ -6,11 +6,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { SignupComponent } from './signup/signup.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'product',
     pathMatch: 'full',
     canActivate: [AuthGuardService]
   }, {
@@ -26,6 +27,10 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
+    path: 'signup',
+    component: SignupComponent
+  },
+  {
     path: '**',
     redirectTo: ''
   }
@@ -36,7 +41,7 @@ const routes: Routes = [
     CommonModule,
     BrowserModule,
     RouterModule.forRoot(routes, {
-      useHash: true
+      useHash: false
     })
   ],
   exports: [

@@ -17,7 +17,7 @@ export class InvoiceService {
     this.registerServerEvents();
   }
 
-  private _host = window.location.origin + window.location.pathname;
+  private _host = window.location.origin + "/";
 
   getInvoices(): Observable<Response<Invoice[]>> {
     return this.httpClient.get<Response<Invoice[]>>(this._host + "api/Product/GetAllPending");

@@ -6,6 +6,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LoginComponent } from '../login/login.component';
 import { FormsModule } from '@angular/forms';
+import { SignupComponent } from '../signup/signup.component';
 
 @NgModule({
   imports: [
@@ -17,13 +18,15 @@ import { FormsModule } from '@angular/forms';
 
     NavbarComponent,
     SidebarComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   exports: [
 
     NavbarComponent,
     SidebarComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ]
 })
 export class ComponentsModule { }

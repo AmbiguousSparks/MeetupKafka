@@ -1,0 +1,69 @@
+<div class="main-content bg-dark py-5">
+  <div class="container text-center">
+    <div class="container-fluid col-lg-6 col-md-8 col-12 borda shadow-lg p-5">
+      <h3 class="text-info mb-5">Criar nova conta</h3>
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)" id="form-login" method="post" class="w-100 text-left mx-auto">
+        <div class="form-group">
+          <label for="name">Nome:</label>
+          <input required id="name"
+                 #name="ngModel"
+                 [(ngModel)]="user.name"
+                 name="name"
+                 type="text"
+                 class="form-control text-light" />
+          <div *ngIf="invalidTouched(name)" class="text-danger">
+            Nome é obrigatório.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="username">Nome de usuário:</label>
+          <input (keyup)="validateUsername($event.target.value)" required id="username"
+                 #username="ngModel"
+                 [(ngModel)]="user.username"
+                 name="username"
+                 type="text"
+                 class="form-control text-light" />
+          <div *ngIf="invalidTouched(username)" class="text-danger">
+            Nome de usuário é obrigatório.
+          </div>
+          <div *ngIf="exists" class="text-danger">
+            Nome de usuário já em uso.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Senha:</label>
+          <input required id="password"
+                 #password="ngModel"
+                 [(ngModel)]="user.password"
+                 name="password"
+                 type="password"
+                 placeholder="*******"
+                 class="form-control text-light" />
+          <div *ngIf="invalidTouched(password)" class="text-danger">
+            Senha é obrigatória.
+          </div>
+          <label for="confirmPassword">Confirmar senha:</label>
+          <input required id="confirmPassword"
+                 #confirmPassword="ngModel"
+                 [(ngModel)]="user.confirmPassword"
+                 name="confirmPassword"
+                 type="password"
+                 placeholder="*******"
+                 class="form-control text-light" />
+          <div *ngIf="confirmarPassword(password, confirmPassword)" class="text-danger">
+            Senhas não são iguais.
+          </div>
+        </div>
+        <div class="form-group my-2">
+          <a href="#" [routerLink]="['/login']"><span class="form-label text-info">Já tenho uma conta</span></a>
+        </div>
+        <div class="form-group text-center">
+          <button [disabled]="!validateUser(user)" class="btn text-light" [class.btn-outline-info]="validateUser(user)"
+                  [class.btn-outline-danger]="!validateUser(user)" type="submit">
+            Criar conta
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

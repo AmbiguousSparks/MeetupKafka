@@ -10,7 +10,7 @@ import { User } from '../models/user';
 })
 export class UserService {
 
-  private _host = window.location.origin + window.location.pathname;
+  private _host = window.location.origin + "/";
   private _token: TokenResponse;
 
   public get token(): TokenResponse {
@@ -40,16 +40,25 @@ export class UserService {
   constructor(private httpClient: HttpClient) {
   }
 
-  newUser(user: User): Observable<Response<User>> {
+  async newUser(user: User): Promise<Response<TokenResponse>> {
     const request = JSON.stringify(user);
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
-
-    return this.httpClient.post<Response<User>>(`${this._host}api/Users/New`, request, {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json;charset=utf-8');
+    let options = {
       headers
-    });
+    };
+    let response = await this.httpClient.post<Response<User>>(`${this._host}api/Users/New`, request, options).toPromise();
+    return await this.login(response.result);
   }
 
+  async validateUsername(user: User): Promise<Response<boolean>> {
+    const request = JSON.stringify(user);
+    let headers = new HttpHeaders().set('Content-Type', 'application/json;charset=utf-8');
+    let options = {
+      headers
+    };
+    let response = await this.httpClient.post<Response<boolean>>(`${this._host}api/Users/UserExists`, request, options).toPromise();
+    return response;
+  }
 
   async login(user: User): Promise<Response<TokenResponse>> {
     const request = JSON.stringify(user);

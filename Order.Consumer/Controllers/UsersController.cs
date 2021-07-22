@@ -23,15 +23,17 @@ namespace Order.Consumer.Controllers
             _userRepository = userRepository;
         }
 
-        public async Task<IActionResult> UserExists(string username, CancellationToken cancellationToken = default)
+        [Route("api/Users/UserExists"), HttpPost]
+        public async Task<IActionResult> UserExists([FromBody]User user, CancellationToken cancellationToken = default)
         {
             try
             {
-                return Ok(new ResponseBuilder<bool>().Build(await UserExistsAsync(username, cancellationToken)));
-            }catch(OrderException e)
+                return Ok(new ResponseBuilder<bool>().Build(await UserExistsAsync(user.Username, cancellationToken)));
+            }
+            catch (OrderException e)
             {
                 List<string> errors = new() { e.Message };
-                return BadRequest( new ResponseBuilder<bool>().Build(false, System.Net.HttpStatusCode.BadRequest, true, errors));
+                return BadRequest(new ResponseBuilder<bool>().Build(false, System.Net.HttpStatusCode.BadRequest, true, errors));
             }
         }
 
@@ -43,7 +45,7 @@ namespace Order.Consumer.Controllers
                 if (await UserExistsAsync(user.Username, cancellationToken))
                     throw new InvalidOperationException("Username already exists!");
                 await _userRepository.Add(user, cancellationToken);
-                return Created("/", new ResponseBuilder<User>().Build(user));                
+                return Created("/", new ResponseBuilder<User>().Build(user));
             }
             catch (OrderException e)
             {
