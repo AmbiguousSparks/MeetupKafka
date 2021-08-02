@@ -1,4 +1,4 @@
-<div class="main-content">
+<div class="main-content bg-dark">
   <div class="row p-3 mx-auto">
     <div class="card col-3 mr-5" *ngFor="let product of products">
       <div class="card-header card-header-info">
@@ -11,12 +11,12 @@
         <p class="card-category">{{product.name}}</p>
       </div>
       <div class="card-body">
-        <span>{{product.description}}</span>
+        <span><button class="btn btn-outline-info" type="button" [routerLink]="['/details']" [queryParams]="{id: product.id }">Detalhes</button></span>
       </div>
       <div class="card-footer">
         <div class="mx-auto">
-          <button class="btn btn-info" (click)="updateStatus(product.id, 2)">Aprovar</button>
-          <button class="btn btn-danger" (click)="updateStatus(product.id, 3)">Reprovar</button>
+          <button class="btn btn-outline-success" (click)="updateStatus(product.id, 2)">Aprovar</button>
+          <button class="btn btn-outline-danger" (click)="updateStatus(product.id, 3)">Reprovar</button>
         </div>
       </div>
     </div>

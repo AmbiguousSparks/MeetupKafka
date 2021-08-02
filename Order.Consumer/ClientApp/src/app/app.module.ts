@@ -11,9 +11,9 @@ import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 
 import { LayoutComponent } from './layouts/layout/layout.component';
-import { ProductComponent } from './product/product.component';
-import { TokenMiddlewareService } from './services/token-middleware.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ProductComponent } from './pages/product/product.component';
+import { TokenMiddlewareService } from './services/token-middleware.service';
 @NgModule({
   imports: [
     BrowserAnimationsModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { Invoice, InvoiceService } from "app/services/invoice.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Invoice, InvoiceService } from "../../services/invoice.service";
 
 @Component({
   selector: "app-product",

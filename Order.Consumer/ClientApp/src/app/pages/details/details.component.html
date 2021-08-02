@@ -1,0 +1,25 @@
+<div class="main-content bg-dark text-light">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12 col-md-3 text-sm-center pt-4">
+        <img class="img-thumbnail"
+             src="{{'data:image/jpg;base64,' + product.photo}}" />
+      </div>
+      <div class="col-md-3 text-sm-center col-sm-12">
+        <h3>{{ product.name }}</h3>
+        <div class="scrollbar-description">
+          <span class="scrollbar-description-content">{{product.description}}</span>
+        </div>
+      </div>
+      <div class="col-md-3 text-sm-center col-sm-12 pt-4">
+        <div *ngFor="let feature of product.features |keyvalue">
+          <span><b>{{ feature.key }}</b>: {{ feature.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row ml-5 w-50 my-5 d-flex flex-row">
+      <button class="btn btn-outline-success" (click)="updateStatus(product.id, 2)">Aprovar</button>
+      <button class="btn btn-outline-danger" (click)="updateStatus(product.id, 3)">Reprovar</button>
+  </div>
+</div>

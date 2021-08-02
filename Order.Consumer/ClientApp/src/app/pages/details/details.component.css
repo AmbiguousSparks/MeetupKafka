@@ -1,0 +1,28 @@
+.scrollbar-description {
+  overflow: auto;
+  visibility: hidden;
+  max-height: 300px;
+}
+
+.scrollbar-description-content,
+.scrollbar-description:hover,
+.scrollbar-description:focus {
+  visibility: visible;
+}
+
+  .scrollbar-description::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .scrollbar-description::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, .4);
+    border-radius: 10px;
+  }
+
+::-webkit-scrollbar-thumb {
+  background: #666;
+}
+
+.scrollbar-description:hover {
+  overflow-y: auto;
+}

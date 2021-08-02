@@ -23,7 +23,7 @@ export class InvoiceService {
     return this.httpClient.get<Response<Invoice[]>>(this._host + "api/Product/GetAllPending");
   }
   getById(id: string): Observable<Response<Invoice>> {
-    return this.httpClient.get<Response<Invoice>>(this._host + "api/Product/GetById?id=" + id);
+    return this.httpClient.get<Response<Invoice>>(this._host + "api/Product/Get?id=" + id);
   }
   private connect(name: string): void {
     this._hubConnection.invoke("Connect", name);
@@ -76,5 +76,5 @@ export interface Invoice {
   photo: string;
   value: number;
   category: number;
-  features: string[];
+  features: {};
 }

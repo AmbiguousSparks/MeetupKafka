@@ -4,9 +4,10 @@ import { RouterModule } from '@angular/router';
 
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { LoginComponent } from '../login/login.component';
 import { FormsModule } from '@angular/forms';
-import { SignupComponent } from '../signup/signup.component';
+import { LoginComponent } from '../pages/login/login.component';
+import { SignupComponent } from '../pages/signup/signup.component';
+import { DetailsComponent } from '../pages/details/details.component';
 
 @NgModule({
   imports: [
@@ -19,14 +20,16 @@ import { SignupComponent } from '../signup/signup.component';
     NavbarComponent,
     SidebarComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    DetailsComponent
   ],
   exports: [
 
     NavbarComponent,
     SidebarComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    DetailsComponent
   ]
 })
 export class ComponentsModule { }

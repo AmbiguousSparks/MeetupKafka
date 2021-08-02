@@ -4,9 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LayoutComponent } from './layouts/layout/layout.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './pages/login/login.component';
 import { AuthGuardService } from './services/auth-guard.service';
-import { SignupComponent } from './signup/signup.component';
+import { SignupComponent } from './pages/signup/signup.component';
 
 const routes: Routes = [
   {
